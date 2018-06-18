@@ -1,3 +1,4 @@
+
 """
 Server for viewing the DC Code locally
 
@@ -18,6 +19,10 @@ import json
 DIR = os.path.abspath(os.path.dirname(__file__))
 
 class RequestHandler(SimpleHTTPRequestHandler):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.extensions_map[''] = 'text/html'
+
     def do_GET(self):
         redirect = self.server.redirects.get(self.path)
         if redirect:
