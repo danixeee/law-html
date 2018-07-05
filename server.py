@@ -17,6 +17,24 @@ import json
 
 DIR = os.path.abspath(os.path.dirname(__file__))
 
+filetypes = {
+    'html',
+    'pdf',
+    'jpg',
+    'svg',
+    'png',
+    'gif',
+    'css',
+    'js',
+    'mustache',
+    'json',
+    'bulk',
+    'map',
+    'ttf',
+    'eot',
+    'woff',
+}
+
 class RequestHandler(SimpleHTTPRequestHandler):
     def do_GET(self):
         redirect = self.server.redirects.get(self.path)
@@ -27,6 +45,9 @@ class RequestHandler(SimpleHTTPRequestHandler):
             self.send_header('Location', location)
             self.end_headers()
         else:
+            # default to html if no valid filetype - this is not the right way to do this - it should be a retry.
+            if not self.path.endswith('/') and ('.' not in self.path or self.path.rsplit('.', 1)[1] not in filetypes):
+                self.path = self.path + '.html'
             super().do_GET()
 
     def translate_path(self, path):

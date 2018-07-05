@@ -29,37 +29,35 @@
       "properties": {
         "num": {
           "type": "text",
-          "index": "analyzed",
+          "index": true,
           "analyzer": "text_analyzer",
-          "store": "yes",
+          "store": true,
           "boost": 100
         },
         "title": {
           "term_vector": "with_positions_offsets",
-          "index": "analyzed",
+          "index": true,
           "type": "text",
           "analyzer": "text_analyzer",
-          "store": "yes",
+          "store": true,
           "boost": 5
         },
         "body": {
           "term_vector": "with_positions_offsets",
-          "index": "analyzed",
+          "index": true,
           "type": "text",
           "analyzer": "text_analyzer",
-          "store": "yes"
+          "store": true
         },
         "url": {
           "type": "text",
-          "index": "no",
-          "store": "yes",
-          "include_in_all": "false"
+          "index": false,
+          "store": true
         },
         "path" : {
           "type" : "text",
           "analyzer" : "path_analyzer",
-          "search_analyzer": "path_analyzer",
-          "include_in_all": "false"
+          "search_analyzer": "path_analyzer"
         }
       }
     }
