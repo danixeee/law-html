@@ -10,7 +10,8 @@ Visit `localhost:8000` in your web browser.
 
 from http.server import SimpleHTTPRequestHandler, HTTPServer
 import argparse
-import sys, os
+import sys
+import os
 import urllib.parse
 import urllib.request
 import http.client
@@ -20,8 +21,12 @@ import json
 
 DIR = os.path.abspath(os.path.dirname(__file__))
 
+# make sure our working directory for this server is the same as this file is in
+os.chdir(DIR)
+
 with open('version.json') as f:
     VERSION_INFO = json.load(f)
+
 DEFAULT_SEARCH_URL = VERSION_INFO['meta']['canonical-urls']['html']
 PORTAL_CLIENT_CLASS = None
 PORTAL_HOST = None
@@ -57,7 +62,8 @@ class RequestHandler(SimpleHTTPRequestHandler):
         if Client is None:
             self.send_response(400)
             self.end_headers()
-            message = 'Local server not configured to proxy {0}. Please run with the "--{0}-proxy-url" flag '.format(upstream_name)
+            message = 'Local server not configured to proxy {0}. Please run with the "--{0}-proxy-url" flag '.format(
+                upstream_name)
             self.wfile.write(message.encode('utf-8'))
             return
         client = Client(host)
@@ -119,8 +125,8 @@ class RequestHandler(SimpleHTTPRequestHandler):
         # replace colons (not allowed in win paths) with tilde
         path = path.replace(':', '~')
         # abandon query parameters
-        path = path.split('?',1)[0]
-        path = path.split('#',1)[0]
+        path = path.split('?', 1)[0]
+        path = path.split('#', 1)[0]
         # Don't forget explicit trailing slash when normalizing. Issue17324
         trailing_slash = path.rstrip().endswith('/')
         try:
@@ -140,6 +146,7 @@ class RequestHandler(SimpleHTTPRequestHandler):
             path += '/'
         return path
 
+
 def get_http_client_info(upstream_name, url):
     """
     return the http.client class and host needed to reach the given url
@@ -152,6 +159,7 @@ def get_http_client_info(upstream_name, url):
     Client = getattr(http.client, scheme.upper() + 'Connection')
     print('PROXYING: "/_{}" to {}'.format(upstream_name, url))
     return Client, host
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
